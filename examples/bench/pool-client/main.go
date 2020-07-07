@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	addr            = "127.0.0.1:9999"
+	addr            = []string{"127.0.0.1:9999", "127.0.0.1:9998"}
 	connTimeout     = time.Second * 2
 	idleTimeout     = time.Second * 120
 	timeout         = time.Second * 10
@@ -41,8 +41,11 @@ func init() {
 	thriftPoolAgent.Init(thriftPool)
 }
 
-func thriftDial(addr string, duration time.Duration) (*pool.IdleClient, error) {
+func thriftDial(addrs []string, duration time.Duration) (*pool.IdleClient, error) {
 	var transport thrift.TTransport
+
+	addr := addrs[RandInt(len(addrs))]
+	fmt.Println("connect:", addr)
 	transport, err := thrift.NewTSocketTimeout(addr, connTimeout)
 	if err != nil {
 		return nil, err
@@ -61,6 +64,11 @@ func thriftDial(addr string, duration time.Duration) (*pool.IdleClient, error) {
 		Transport: transport,
 		RawClient: client,
 	}, nil
+}
+
+func RandInt(max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return rand.Intn(max)
 }
 
 func thriftClose(client *pool.IdleClient) error {
@@ -123,10 +131,10 @@ func main() {
 	go startPprof()
 
 	//start()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1; i++ {
 		go start()
 	}
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Millisecond * 10)
 	avgQps := float64(successCount) / float64(10)
 	avgDelay := float64(delay) / float64(successCount) / 1000
 	log.Println(fmt.Sprintf("总运行时间：600s, 并发协程数：100，平均吞吐量：%v，平均延迟（ms）：%v，总成功数：%d，总失败数：%d",

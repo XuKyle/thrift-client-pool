@@ -5,7 +5,7 @@ import "time"
 // 连接池配置
 type ThriftPoolConfig struct {
 	// Thrfit Server端地址
-	Addr string
+	Addr []string
 	// 最大连接数
 	MaxConn int32
 	// 创建连接超时时间

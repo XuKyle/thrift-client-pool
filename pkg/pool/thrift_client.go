@@ -30,7 +30,7 @@ type idleConn struct {
 }
 
 // Thrift客户端创建方法，留给业务去实现
-type ThriftDial func(addr string, connTimeout time.Duration) (*IdleClient, error)
+type ThriftDial func(addr []string, connTimeout time.Duration) (*IdleClient, error)
 
 //关闭Thrift客户端，留给业务实现
 type ThriftClientClose func(client *IdleClient) error
