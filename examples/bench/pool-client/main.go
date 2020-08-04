@@ -134,7 +134,7 @@ func main() {
 	for i := 0; i < 1; i++ {
 		go start()
 	}
-	time.Sleep(time.Millisecond * 10)
+	time.Sleep(time.Second * 30)
 	avgQps := float64(successCount) / float64(10)
 	avgDelay := float64(delay) / float64(successCount) / 1000
 	log.Println(fmt.Sprintf("总运行时间：600s, 并发协程数：100，平均吞吐量：%v，平均延迟（ms）：%v，总成功数：%d，总失败数：%d",
